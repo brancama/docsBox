@@ -32,6 +32,7 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
         }
 
         h1 {
@@ -42,6 +43,30 @@
         .subtitle {
             opacity: 0.9;
             font-size: 1.1em;
+        }
+
+        .fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
         }
 
         .main-content {
@@ -645,6 +670,10 @@
 <body>
     <div class="container">
         <header>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fullscreenBtn">
+                <span id="fullscreenIcon">⛶</span>
+                <span id="fullscreenText">Plein écran</span>
+            </button>
             <h1>📝 Gestionnaire d'Exercices Scolaires</h1>
             <p class="subtitle">Créez et complétez vos exercices par matière</p>
         </header>
@@ -763,6 +792,36 @@
         function init() {
             chargerDonnees();
             afficherClasseurs();
+
+            // Écouter les changements de plein écran
+            document.addEventListener('fullscreenchange', updateFullscreenButton);
+        }
+
+        // Fonction pour basculer le plein écran
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                // Entrer en plein écran
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Erreur lors du passage en plein écran: ${err.message}`);
+                });
+            } else {
+                // Sortir du plein écran
+                document.exitFullscreen();
+            }
+        }
+
+        // Mettre à jour le bouton selon l'état du plein écran
+        function updateFullscreenButton() {
+            const icon = document.getElementById('fullscreenIcon');
+            const text = document.getElementById('fullscreenText');
+
+            if (document.fullscreenElement) {
+                icon.textContent = '⛶';
+                text.textContent = 'Quitter';
+            } else {
+                icon.textContent = '⛶';
+                text.textContent = 'Plein écran';
+            }
         }
 
         // Gestion du localStorage
